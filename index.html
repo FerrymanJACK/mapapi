@@ -36,19 +36,44 @@
 		</div>
 	</div>
 
+	<!-- 1.3 地图语言切换 -->
+	<div class="input-card" style="width:16rem;margin-bottom:200px;">
+	    <h4>底图语言切换</h4>
+	    <div id="lang">
+	        <div class="input-item"><input id="en" name="language" type="radio" checked="checked"><span class="input-text">英文底图</span></div>
+	        <div class="input-item"><input id="zh_en" name="language" type="radio"><span class="input-text">中英文对照</span></div>
+	        <div class="input-item"><input id="zh_cn" name="language" type="radio"><span class="input-text">中文底图</span></div>
+	    </div>
+    </div>
 
+    <!-- 1.4 地图中心点与当前级别 -->
+    <div class="info">
+	    <h4>获取地图级别与中心点坐标</h4>
+	    <p>当前级别：<span id="map-zoom">11</span></p>
+	    <p>当前中心点：<span id="map-center">121.498586,31.239637</span></p>
+	</div>
 
+	<!-- 1.5根据cityname, citycode, adcode 设置当前行政区 -->
+	<!-- <div class="input-card" style="width:24rem;margin-bottom:100px">
+	    <h4>设置地图当前行政区</h4>
+	    <div class="input-item">
+	      <input id='city-name' placeholder="北京市" type="text" style="margin-right:1rem;"><button class="btn" id="query">去指定城市</button>
+	    </div>
+	</div> -->
 
 	<!-- 加载地图JSAPI脚本 -->
 	<script src="https://webapi.amap.com/maps?v=1.4.10&key=9222cbacbc0736e1e36cc94cb818d62b"></script>
 	<!-- 1.2功能引入 -->
 	<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+	<!-- 1.3功能引入 -->
+	<script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
 	<script>
 		//1.1
 	    var map = new AMap.Map('container', {
-	        resizeEnable: true,            //是否监控地图容器尺寸变化
-	        zoom:11,                       //初始化地图层级
-	        center: [116.397428, 39.90923] //初始化地图中心点
+	        resizeEnable: true,             //是否监控地图容器尺寸变化
+	        zoom:11,                        //初始化地图层级
+	        center: [116.397428, 39.90923], //初始化地图中心点
+	        lang: "en"                      //1.3 可选值：en，zh_en, zh_cn
 	    });
 
 	    map.on("complete", function(){
@@ -79,6 +104,35 @@
 		//绑定创建、销毁事件
 		document.querySelector("#create-btn").onclick = createMap;
 		document.querySelector("#destroy-btn").onclick = destroyMap;
+
+
+		//1.3
+		//绑定radio点击事件
+	    var radios = document.querySelectorAll("#lang input");
+	    radios.forEach(function(ratio) {
+	      ratio.onclick = setLang;
+	    });
+
+	    function setLang() {
+	      map.setLang(this.id);
+	    }
+
+	    //1.4 
+	    //显示地图层级与中心点信息
+	    function logMapinfo(){
+	      var zoom = map.getZoom(); //获取当前地图级别
+	      var center = map.getCenter(); //获取当前地图中心位置
+
+	      document.querySelector("#map-zoom").innerText = zoom;
+	      document.querySelector("#map-center").innerText = center.toString();
+	    };
+
+	    //绑定地图移动与缩放事件
+	    map.on('moveend', logMapinfo);
+	    map.on('zoomend', logMapinfo);
+
+	    //1.5
+
 	</script>
 </body>
 </html>
