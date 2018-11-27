@@ -22,15 +22,64 @@
 <!-- </body> -->
 
 <body>
+	<!-- 1.1地图容器 -->
 	<div id="container"></div>
+
+	<!-- 1.2 地图的创建与销毁 -->
+	<div class="input-card" style="width:16rem">
+		<h4>创建、销毁地图</h4>
+		<div id="btns">
+		  <div class="input-item">
+		    <button id="create-btn" class="btn" style="margin-right:1rem;">创建地图</button>
+		    <button id="destroy-btn" class="btn">销毁地图</button>
+		  </div>
+		</div>
+	</div>
+
+
+
+
 	<!-- 加载地图JSAPI脚本 -->
 	<script src="https://webapi.amap.com/maps?v=1.4.10&key=9222cbacbc0736e1e36cc94cb818d62b"></script>
+	<!-- 1.2功能引入 -->
+	<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
 	<script>
+		//1.1
 	    var map = new AMap.Map('container', {
-	        resizeEnable: true, //是否监控地图容器尺寸变化
-	        zoom:11, //初始化地图层级
+	        resizeEnable: true,            //是否监控地图容器尺寸变化
+	        zoom:11,                       //初始化地图层级
 	        center: [116.397428, 39.90923] //初始化地图中心点
 	    });
+
+	    map.on("complete", function(){
+	       // log.success("地图加载完成！");  
+	       console.log("地图加载完成!")
+	    }); 
+
+
+	    //1.2
+	    var map = null;
+		function createMap() {
+		  map = new AMap.Map('container', {
+		    resizeEnable: true
+		  });
+		  // log.success("创建地图成功");
+		  console.log("创建地图成功!")
+		}
+
+		function destroyMap() {
+		  map && map.destroy();
+		  // log.info("地图已销毁");
+		  console.log("地图已销毁");
+		}
+
+		//初始化地图
+		createMap();
+
+		//绑定创建、销毁事件
+		document.querySelector("#create-btn").onclick = createMap;
+		document.querySelector("#destroy-btn").onclick = destroyMap;
 	</script>
 </body>
 </html>
+
